@@ -48,7 +48,7 @@ NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimation
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self
                                                    selector:@selector(animation)];
-    self.displayLink.preferredFramesPerSecond = [self.frameRate integerValue];
+    self.displayLink.frameInterval = 100/[self.frameRate integerValue];
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     for( int i = 0 ; i < [self.barNumber integerValue] ; i ++ ){
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
