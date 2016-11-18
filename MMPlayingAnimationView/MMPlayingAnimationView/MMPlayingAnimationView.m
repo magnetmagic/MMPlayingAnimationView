@@ -17,11 +17,13 @@ static CGFloat kBarSpeed = 0.04f;
 @property UIColor *barColor;
 @property NSNumber *barWidthRate;
 @property NSNumber *barNumber;
+@property NSNumber *frameRate;
 @end
 
 NSString * const kMMPlayingAnimationViewSettingsBarColorKey = @"MMPlayingAnimationViewBarColorKey";
 NSString * const kMMPlayingAnimationViewSettingsBarWidthRateKey = @"MMPlayingAnimationViewBarWidthRateKey";
 NSString * const kMMPlayingAnimationViewSettingsBarNumber = @"MMPlayingAnimationViewBarNumber";
+NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimationViewSettingsFrameRates";
 
 @implementation MMPlayingAnimationView
 
@@ -29,6 +31,7 @@ NSString * const kMMPlayingAnimationViewSettingsBarNumber = @"MMPlayingAnimation
     self.barColor = settings[kMMPlayingAnimationViewSettingsBarColorKey];
     self.barWidthRate = settings[kMMPlayingAnimationViewSettingsBarWidthRateKey];
     self.barNumber = settings[kMMPlayingAnimationViewSettingsBarNumber];
+    self.frameRate = settings[kMMPlayingAnimationViewSettingsFrameRate];
 }
 - (void)stop{
     self.displayLink.paused = YES;
@@ -45,6 +48,7 @@ NSString * const kMMPlayingAnimationViewSettingsBarNumber = @"MMPlayingAnimation
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self
                                                    selector:@selector(animation)];
+    self.displayLink.preferredFramesPerSecond = [self.frameRate integerValue];
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     for( int i = 0 ; i < [self.barNumber integerValue] ; i ++ ){
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
@@ -78,15 +82,18 @@ NSString * const kMMPlayingAnimationViewSettingsBarNumber = @"MMPlayingAnimation
         CAShapeLayer *layer =  self.shapeLayers[i];
         
         CGFloat num = [number integerValue] / 100.0f;
+//        NSLog(@"layer.strokeEnd = %f",layer.strokeEnd);
         if( num > 0.0f ){
             layer.strokeEnd += kBarSpeed ;
             if( layer.strokeEnd > num ){
+//                NSLog(@"change down %f",num);
                 number = @(0);
                 self.randoms[i] = number;
             }
         }else{
             layer.strokeEnd -= kBarSpeed ;
             if( layer.strokeEnd <= 0.0f ){
+//                NSLog(@"change up %f",num);
                 NSInteger random = [self random];
                 number = @(random);
                 self.randoms[i] = number;
@@ -97,18 +104,21 @@ NSString * const kMMPlayingAnimationViewSettingsBarNumber = @"MMPlayingAnimation
 }
 -(NSInteger)random{
     NSInteger value =  ((NSInteger) arc4random()) % 70;
-    //NSLog(@"random = %ld",(long)value);
+//    NSLog(@"random = %ld",(long)value+20);
     return value+20;
 }
 -(void)setDefaultSetting{
     if( !self.barColor ){
         self.barColor = [UIColor blackColor];
     }
-    if( !self.barWidthRate || [self.barWidthRate doubleValue] <= 0.0f ){
+    if( !self.barWidthRate || [self.barWidthRate doubleValue]){
         self.barWidthRate =@(0.8f);
     }
     if( !self.barNumber || [self.barNumber integerValue] <= 0 ){
         self.barNumber = @(3);
+    }
+    if( !self.frameRate || [self.frameRate integerValue] <= 0 ){
+        self.frameRate = @(20);
     }
     
 }

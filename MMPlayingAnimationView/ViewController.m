@@ -32,7 +32,8 @@
 
     [self.playingAnimationView settings:@{kMMPlayingAnimationViewSettingsBarNumber:@(5),
                                           kMMPlayingAnimationViewSettingsBarColorKey:keyColor,
-                                          kMMPlayingAnimationViewSettingsBarWidthRateKey:@(0.7f)}];
+                                          kMMPlayingAnimationViewSettingsBarWidthRateKey:@(0.7f),
+                                          kMMPlayingAnimationViewSettingsFrameRate:@(30)}];
     
 }
 
