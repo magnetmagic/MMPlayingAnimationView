@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString * const kMMPlayingAnimationViewSettingsBarColorKey;
+extern NSString * const kMMPlayingAnimationViewSettingsBarWidthRateKey;
+extern NSString * const kMMPlayingAnimationViewSettingsBarNumber;
+
 @interface MMPlayingAnimationView : UIView
+- (void)settings:(NSDictionary*)settings;
 - (void)start;
+- (void)stop;
 @end
