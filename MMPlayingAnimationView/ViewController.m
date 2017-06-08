@@ -9,7 +9,8 @@
 #import "ViewController.h"
 #import "MMPlayingAnimationView.h"
 @interface ViewController ()
-@property (assign) IBOutlet MMPlayingAnimationView *playingAnimationView;
+@property (assign) IBOutlet MMPlayingAnimationView *playingAnimationView1;
+@property (assign) IBOutlet MMPlayingAnimationView *playingAnimationView2;
 @end
 
 @implementation ViewController
@@ -27,10 +28,10 @@
                                         green:199/255.0f
                                          blue:35/255.0f alpha:1.0f];
     
-    self.playingAnimationView.backgroundColor = themeColor1;
+    self.playingAnimationView1.backgroundColor = themeColor1;
     self.view.backgroundColor = themeColor2;
 
-    [self.playingAnimationView settings:@{kMMPlayingAnimationViewSettingsBarNumber:@(5),
+    [self.playingAnimationView1 settings:@{kMMPlayingAnimationViewSettingsBarNumber:@(5),
                                           kMMPlayingAnimationViewSettingsBarColorKey:keyColor,
                                           kMMPlayingAnimationViewSettingsBarWidthRateKey:@(0.7f),
                                           kMMPlayingAnimationViewSettingsFrameRate:@(30)}];
@@ -38,9 +39,11 @@
 }
 
 - (IBAction)start:(id)sender{
-    [self.playingAnimationView start];
+    [self.playingAnimationView1 start];
+    [self.playingAnimationView2 start];
 }
 - (IBAction)stop:(id)sender{
-    [self.playingAnimationView stop];
+    [self.playingAnimationView1 stop];
+    [self.playingAnimationView2 stop];
 }
 @end

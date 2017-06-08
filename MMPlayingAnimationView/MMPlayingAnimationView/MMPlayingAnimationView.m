@@ -14,10 +14,10 @@ static CGFloat kBarSpeed = 0.04f;
 @property NSMutableArray <CAShapeLayer*>* shapeLayers;
 @property NSMutableArray <NSNumber*>* randoms;
 // settings
-@property UIColor *barColor;
-@property NSNumber *barWidthRate;
-@property NSNumber *barNumber;
-@property NSNumber *frameRate;
+@property IBInspectable UIColor *barColor;
+@property IBInspectable CGFloat barWidthRate;
+@property IBInspectable NSInteger frameRate;
+@property IBInspectable NSInteger barNumber;
 @end
 
 NSString * const kMMPlayingAnimationViewSettingsBarColorKey = @"MMPlayingAnimationViewBarColorKey";
@@ -29,9 +29,9 @@ NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimation
 
 - (void)settings:(NSDictionary*)settings{
     self.barColor = settings[kMMPlayingAnimationViewSettingsBarColorKey];
-    self.barWidthRate = settings[kMMPlayingAnimationViewSettingsBarWidthRateKey];
-    self.barNumber = settings[kMMPlayingAnimationViewSettingsBarNumber];
-    self.frameRate = settings[kMMPlayingAnimationViewSettingsFrameRate];
+    self.barWidthRate = [settings[kMMPlayingAnimationViewSettingsBarWidthRateKey] floatValue];
+    self.barNumber = [settings[kMMPlayingAnimationViewSettingsBarNumber] integerValue];
+    self.frameRate = [settings[kMMPlayingAnimationViewSettingsFrameRate] integerValue];
 }
 - (void)stop{
     self.displayLink.paused = YES;
@@ -43,21 +43,21 @@ NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimation
     }
     [self setDefaultSetting];
     
-    self.shapeLayers = [NSMutableArray arrayWithCapacity:[self.barNumber integerValue]];
-    self.randoms = [NSMutableArray arrayWithCapacity:[self.barNumber integerValue]];
+    self.shapeLayers = [NSMutableArray arrayWithCapacity:self.barNumber];
+    self.randoms = [NSMutableArray arrayWithCapacity:self.barNumber];
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self
                                                    selector:@selector(animation)];
-    self.displayLink.frameInterval = 100/[self.frameRate integerValue];
+    self.displayLink.frameInterval = 100/self.frameRate;
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    for( int i = 0 ; i < [self.barNumber integerValue] ; i ++ ){
+    for( int i = 0 ; i < self.barNumber ; i ++ ){
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-        CGFloat w = self.bounds.size.width  / [self.barNumber integerValue];
+        CGFloat w = self.bounds.size.width  / self.barNumber;
         CGFloat h = self.bounds.size.height;
         CGRect frame = CGRectMake(i * w , 0, h,w );
         shapeLayer.frame = frame;
         shapeLayer.lineCap = @"square";
-        shapeLayer.lineWidth = w * [self.barWidthRate doubleValue];
+        shapeLayer.lineWidth = w * self.barWidthRate;
         
         UIBezierPath *path = [UIBezierPath bezierPath];
         [path moveToPoint:CGPointMake(w/2, h)];
@@ -77,7 +77,7 @@ NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimation
     }
 }
 - (void)animation{
-    for( int i = 0 ; i < [self.barNumber integerValue] ; i ++ ){
+    for( int i = 0 ; i < self.barNumber ; i ++ ){
         NSNumber *number =  self.randoms[i];
         CAShapeLayer *layer =  self.shapeLayers[i];
         
@@ -111,14 +111,14 @@ NSString * const kMMPlayingAnimationViewSettingsFrameRate = @"MMPlayingAnimation
     if( !self.barColor ){
         self.barColor = [UIColor blackColor];
     }
-    if( !self.barWidthRate || [self.barWidthRate doubleValue]){
-        self.barWidthRate =@(0.8f);
+    if( !self.barWidthRate || self.barWidthRate){
+        self.barWidthRate =0.8f;
     }
-    if( !self.barNumber || [self.barNumber integerValue] <= 0 ){
-        self.barNumber = @(3);
+    if( !self.barNumber || self.barNumber <= 0 ){
+        self.barNumber = 3;
     }
-    if( !self.frameRate || [self.frameRate integerValue] <= 0 ){
-        self.frameRate = @(20);
+    if( !self.frameRate || self.frameRate <= 0 ){
+        self.frameRate = 20;
     }
     
 }
